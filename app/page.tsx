@@ -8,58 +8,52 @@ import { Footer } from '@/components/Footer'
 import { CursorGlow } from '@/components/CursorGlow'
 
 export default function Home() {
-  // Positions match the mockup: notes clustered tightly around the bottle center
-  // offsetX/offsetY are pixels from center of the bottle image area
+  // Calibrated positions to pull the top notes tighter and drive the wood piece downward past the wide bottle base
   const fiercNotes = [
     {
       id: 'seaweed',
       image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Seaweed_sculpted_from_glass_202606120611-yEUlt2U52jtDBSoDaLvw4QmvZG37ye.jpeg',
       label: 'Seaweed',
-      offsetX: -70,
-      offsetY: -90,
-      size: 140,
+      offsetX: -75,  // Pulled tightly inward toward the bottle neck
+      offsetY: -105, // Lifted slightly to float nicely at the top left
+      size: 115,     // Scaled down slightly so it doesn't crowd the top grid
       rotate: -15,
-      delay: 0,
     },
     {
       id: 'water',
       image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Water_splash_sculpted_glass_ice_202606120628-z4VMzIpbCUQ3mN9MPFzQwlRqv8QBf6.jpeg',
       label: 'Water',
-      offsetX: 70,
-      offsetY: -80,
-      size: 120,
-      rotate: 10,
-      delay: 0.05,
+      offsetX: 75,   // Pulled inward toward the top right of the bottle
+      offsetY: -95,
+      size: 110,
+      rotate: 15,
     },
     {
       id: 'bergamot',
       image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Bergamot_sculpted_out_of_glass_202606120609-XQ7XM7tui9wKhfXhFpAjK7nkIhzWmT.jpeg',
       label: 'Bergamot',
-      offsetX: -55,
-      offsetY: 70,
-      size: 130,
-      rotate: 5,
-      delay: 0.1,
+      offsetX: -85,  // Positioned neatly to the mid-left
+      offsetY: 40,
+      size: 100,
+      rotate: -10,
     },
     {
       id: 'musk',
       image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Musk_crystal_sculpted_glass_ice_202606120610-TDKhUwJByZhL89B54dwEevp5quhxHR.jpeg',
       label: 'Musk',
-      offsetX: 55,
-      offsetY: 80,
-      size: 110,
-      rotate: -8,
-      delay: 0.15,
+      offsetX: 85,   // Framed cleanly to the mid-right
+      offsetY: 45,
+      size: 100,
+      rotate: 15,
     },
     {
       id: 'wood',
       image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Wood_sculpted_glass_ice_202606120608-yTpB9VT6DLI9tpIK7uu2uCzPBdZYNe.jpeg',
       label: 'Wood',
-      offsetX: -5,
-      offsetY: 100,
-      size: 115,
-      rotate: 0,
-      delay: 0.2,
+      offsetX: -15,  // Centered nicely under the bottle base
+      offsetY: 125,  // DRIVEN DOWNWARD past the thickest part of the canister so it's fully visible
+      size: 125,     // Scaled up slightly so that incredible glass wood grain structure pops
+      rotate: 5,
     },
   ]
 
