@@ -16,7 +16,7 @@ export default function Home() {
       label: 'Seaweed',
       offsetX: -75,  // Pulled tightly inward toward the bottle neck
       offsetY: -105, // Lifted slightly to float nicely at the top left
-      size: 115,     // Scaled down slightly so it doesn't crowd the top grid
+      size: 190,     // Scaled down slightly so it doesn't crowd the top grid
       rotate: -15,
     },
     {
