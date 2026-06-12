@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import { NotesBloom } from './NotesBloom'
 
 interface ProductCardProps {
   name: string
@@ -9,10 +10,18 @@ interface ProductCardProps {
   volume: string
   smallVolume: string
   image: string
+  notes?: Array<{
+    id: string
+    image: string
+    angle: number
+    distance: number
+    label: string
+  }>
 }
 
-export function ProductCard({ name, type, volume, smallVolume, image }: ProductCardProps) {
+export function ProductCard({ name, type, volume, smallVolume, image, notes }: ProductCardProps) {
   const [isAdded, setIsAdded] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
 
   const handleAddToCart = () => {
     setIsAdded(true)
@@ -20,9 +29,16 @@ export function ProductCard({ name, type, volume, smallVolume, image }: ProductC
   }
 
   return (
-    <div className="glass-card-inset rounded-[32px] p-8 flex flex-col min-h-[580px] relative group overflow-hidden">
+    <div
+      className="glass-card-inset rounded-[32px] p-8 flex flex-col min-h-[580px] relative group overflow-visible"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Notes Bloom Effect */}
+      {notes && <NotesBloom notes={notes} isVisible={isHovered} />}
+
       {/* Product Image */}
-      <div className="flex-1 flex items-center justify-center mb-6">
+      <div className="flex-1 flex items-center justify-center mb-6 relative z-10">
         <Image
           alt={name}
           className="h-[320px] object-contain drop-shadow-2xl transition-transform duration-700 group-hover:scale-105"
@@ -33,7 +49,7 @@ export function ProductCard({ name, type, volume, smallVolume, image }: ProductC
       </div>
 
       {/* Product Info */}
-      <div className="mt-auto space-y-1">
+      <div className="mt-auto space-y-1 relative z-20">
         <p className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-medium">{type}</p>
         <h3
           className="text-4xl text-white"
@@ -53,7 +69,7 @@ export function ProductCard({ name, type, volume, smallVolume, image }: ProductC
           <button
             onClick={handleAddToCart}
             className={`backdrop-blur-md text-white text-[12px] px-6 py-2.5 rounded-full transition-all active:scale-95 font-medium border border-white/10 ${
-              isAdded ? 'bg-white text-black' : 'bg-white/20 hover:bg-white/30'
+              isAdded ? 'bg-white text-black' : 'bg-white/30 hover:bg-white/40'
             }`}
           >
             {isAdded ? 'Added' : 'Add to cart'}
@@ -63,3 +79,4 @@ export function ProductCard({ name, type, volume, smallVolume, image }: ProductC
     </div>
   )
 }
+
