@@ -22,8 +22,8 @@ export function NotesBloom({ notes, isVisible }: NotesBloomProps) {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.08,
-        delayChildren: 0.1,
+        staggerChildren: 0.06,
+        delayChildren: 0.05,
       },
     },
   }
@@ -31,14 +31,14 @@ export function NotesBloom({ notes, isVisible }: NotesBloomProps) {
   const noteVariants = {
     hidden: {
       opacity: 0,
-      scale: 0.3,
+      scale: 0.2,
       x: 0,
       y: 0,
     },
     visible: (angle: number) => {
       const radians = (angle * Math.PI) / 180
-      const x = Math.cos(radians) * 280
-      const y = Math.sin(radians) * 280
+      const x = Math.cos(radians) * 140
+      const y = Math.sin(radians) * 140
       return {
         opacity: 1,
         scale: 1,
@@ -46,19 +46,19 @@ export function NotesBloom({ notes, isVisible }: NotesBloomProps) {
         y,
         transition: {
           type: 'spring',
-          damping: 16,
-          stiffness: 180,
-          mass: 1.2,
+          damping: 20,
+          stiffness: 200,
+          mass: 1,
         },
       }
     },
     exit: {
       opacity: 0,
-      scale: 0.3,
+      scale: 0.2,
       x: 0,
       y: 0,
       transition: {
-        duration: 0.3,
+        duration: 0.25,
       },
     },
   }
@@ -77,19 +77,22 @@ export function NotesBloom({ notes, isVisible }: NotesBloomProps) {
           custom={note.angle}
           variants={noteVariants}
         >
-          <div className="relative flex flex-col items-center gap-2">
-            <Image
-              src={note.image}
-              alt={note.label}
-              width={120}
-              height={120}
-              className="w-28 h-28 object-contain"
+          <div className="relative flex flex-col items-center gap-1">
+            <div
               style={{
                 mixBlendMode: 'screen',
-                filter: 'drop-shadow(0 0 20px rgba(220, 220, 228, 0.3))',
               }}
-            />
-            <span className="text-[9px] uppercase tracking-widest text-white/40 font-light whitespace-nowrap">
+            >
+              <Image
+                src={note.image}
+                alt={note.label}
+                width={100}
+                height={100}
+                className="w-24 h-24 object-contain drop-shadow-lg"
+                priority
+              />
+            </div>
+            <span className="text-[8px] uppercase tracking-widest text-white/30 font-light whitespace-nowrap">
               {note.label}
             </span>
           </div>
