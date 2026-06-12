@@ -97,9 +97,9 @@ export function ProductCard({ name, type, image, prices, notes }: ProductCardPro
                 <span className="text-2xl font-light text-white leading-none">{currentPrice}</span>
                 <span
                   className="text-lg text-white/80 leading-none"
-                  style={{ fontFamily: 'var(--font-shopvert)' } as React.CSSProperties}
+                  style={{ fontFamily: 'Shopvert, system-ui' }}
                 >
-                  i
+                  {'\uE900'}
                 </span>
               </motion.div>
             </AnimatePresence>
