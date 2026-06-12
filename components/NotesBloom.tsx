@@ -10,7 +10,6 @@ interface NoteItem {
   offsetY: number
   size: number
   rotate?: number
-  delay?: number
 }
 
 interface NotesBloomProps {
@@ -27,11 +26,10 @@ export function NotesBloom({ notes, isVisible }: NotesBloomProps) {
         overflow: 'visible',
       }}
     >
-      {/* Hidden SVG Filter that forces pure black to become transparent */}
+      {/* Our unbreakable transparency filter */}
       <svg className="absolute w-0 h-0" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <filter id="remove-black" colorInterpolationFilters="sRGB">
-            {/* This matrix keeps the Red, Green, and Blue channels, but calculates Alpha based on brightness */}
             <feColorMatrix
               type="matrix"
               values="1 0 0 0 0
@@ -43,53 +41,68 @@ export function NotesBloom({ notes, isVisible }: NotesBloomProps) {
         </defs>
       </svg>
 
-      {notes.map((note) => (
-        <motion.div
-          key={note.id}
-          className="absolute"
-          style={{
-            left: `calc(50% + ${note.offsetX}px)`,
-            top: `calc(50% + ${note.offsetY}px)`,
-            width: note.size,
-            height: note.size,
-            marginLeft: -note.size / 2,
-            marginTop: -note.size / 2,
-          }}
-          initial={{ opacity: 0, scale: 0.05, rotate: note.rotate ?? 0 }}
-          animate={
-            isVisible
-              ? {
-                  opacity: 1,
-                  scale: 1,
-                  rotate: note.rotate ?? 0,
-                  transition: {
-                    type: 'spring',
-                    damping: 18,
-                    stiffness: 160,
-                    delay: note.delay ?? 0,
-                  },
-                }
-              : {
-                  opacity: 0,
-                  scale: 0.05,
-                  rotate: note.rotate ?? 0,
-                  transition: { duration: 0.18, delay: 0 },
-                }
-          }
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={note.image}
-            alt={note.label}
-            className="w-full h-full"
+      {notes.map((note, index) => {
+        // Base rotation value or 0 if undefined
+        const baseRotate = note.rotate ?? 0
+        
+        return (
+          <motion.div
+            key={note.id}
+            className="absolute"
             style={{
-              objectFit: 'contain',
-              display: 'block',
-              filter: 'url(#remove-black)', // Forces the browser to run the transparency filter
+              left: `calc(50% + ${note.offsetX}px)`,
+              top: `calc(50% + ${note.offsetY}px)`,
+              width: note.size,
+              height: note.size,
+              marginLeft: -note.size / 2,
+              marginTop: -note.size / 2,
             }}
-          />
-        </motion.div>
-      ))}
+            initial={{ 
+              opacity: 0, 
+              scale: 0.1, 
+              rotate: baseRotate - 20 // Starts twisted slightly counter-clockwise
+            }}
+            animate={
+              isVisible
+                ? {
+                    opacity: 1,
+                    scale: 1,
+                    rotate: baseRotate, // Smoothly twists to final design angle
+                    transition: {
+                      // Custom cinematic ease-out curve: explosive start, ultra-slow finish
+                      duration: 0.75,
+                      ease: [0.16, 1, 0.3, 1], 
+                      // Staggers each note by an elegant 60ms sequence based on its index
+                      delay: index * 0.06, 
+                    },
+                  }
+                : {
+                    opacity: 0,
+                    scale: 0.1,
+                    rotate: baseRotate - 15,
+                    transition: { 
+                      duration: 0.25, 
+                      ease: "easeInOut",
+                      // Closes slightly staggered in reverse
+                      delay: (notes.length - 1 - index) * 0.03 
+                    },
+                  }
+            }
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={note.image}
+              alt={note.label}
+              className="w-full h-full"
+              style={{
+                objectFit: 'contain',
+                display: 'block',
+                filter: 'url(#remove-black)',
+              }}
+            />
+          </motion.div>
+        )
+      })}
     </div>
   )
 }
