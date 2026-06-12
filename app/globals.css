@@ -1,5 +1,13 @@
 @import 'tailwindcss';
 
+@font-face {
+  font-family: 'Shopvert';
+  src: url('/fonts/sar_shopvert.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme inline {
   --font-sans: var(--font-inter), 'Inter', sans-serif;
   --font-mono: var(--font-jetbrains-mono), 'JetBrains Mono', monospace;
@@ -31,6 +39,11 @@
 :root {
   --font-inter: 'Inter', sans-serif;
   --font-jetbrains-mono: 'JetBrains Mono', monospace;
+  --font-shopvert: 'Shopvert', system-ui;
+}
+
+.font-shopvert {
+  font-family: 'Shopvert', system-ui;
 }
 
 .glass-main {
