@@ -10,6 +10,7 @@ interface ProductCardProps {
   type: string
   image: string
   prices: { '50ml': string; '100ml': string }
+  onAddToCart?: (item: { name: string; type: string; image: string; size: '50ml' | '100ml'; price: string }) => void
   notes?: Array<{
     id: string
     image: string
@@ -22,13 +23,14 @@ interface ProductCardProps {
   }>
 }
 
-export function ProductCard({ name, type, image, prices, notes }: ProductCardProps) {
+export function ProductCard({ name, type, image, prices, onAddToCart, notes }: ProductCardProps) {
   const [isAdded, setIsAdded] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
   const [selectedSize, setSelectedSize] = useState<'50ml' | '100ml'>('50ml')
 
   const handleAddToCart = () => {
     setIsAdded(true)
+    onAddToCart?.({ name, type, image, size: selectedSize, price: prices[selectedSize] })
     setTimeout(() => setIsAdded(false), 1500)
   }
 

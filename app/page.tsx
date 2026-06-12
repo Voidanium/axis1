@@ -6,8 +6,11 @@ import { ProductCard } from '@/components/ProductCard'
 import { ResearchSection } from '@/components/ResearchSection'
 import { Footer } from '@/components/Footer'
 import { CursorGlow } from '@/components/CursorGlow'
+import { CartOverlay } from '@/components/CartOverlay'
+import { useCart } from '@/lib/useCart'
 
 export default function Home() {
+  const { items, isOpen, setIsOpen, addItem, updateQuantity, removeItem, total } = useCart()
   // Calibrated positions to pull the top notes tighter and drive the wood piece downward past the wide bottle base
   const fiercNotes = [
     {
@@ -91,7 +94,11 @@ export default function Home() {
           <div className="glass-main rounded-[40px] p-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
               {products.map((product) => (
-                <ProductCard key={product.name} {...product} />
+                <ProductCard
+                  key={product.name}
+                  {...product}
+                  onAddToCart={addItem}
+                />
               ))}
             </div>
           </div>
@@ -100,6 +107,15 @@ export default function Home() {
         <ResearchSection />
       </main>
       <Footer />
+
+      <CartOverlay
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        items={items}
+        onUpdateQuantity={updateQuantity}
+        onRemove={removeItem}
+        total={total}
+      />
     </>
   )
 }
