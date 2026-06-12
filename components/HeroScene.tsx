@@ -4,7 +4,7 @@ import { useRef } from 'react'
 import { motion, useMotionValue, useTransform, useSpring, useScroll } from 'framer-motion'
 
 const BG      = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Extract_background_from_image_202606122119-oIaSZ3xENHVAVMzYiLabTkrkR5FsQb.jpeg'
-const PORTRAIT = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Untitled33_20260612211423-XC652DOeELHXfcEV18bpZCcDdHPN8U.png'
+const PORTRAIT = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Untitled34_20260612213314-dtIhJ1Xkh0VMWw2vSq8wFetU1AWmtb.png'
 const HAND     = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Untitled33_20260612211425-wCCttcWOweB1NI5h17uUabeR1ROV7V.png'
 
 // SVG noise texture as a data URI for the frosted-glass grit overlay
