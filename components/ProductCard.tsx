@@ -37,8 +37,8 @@ export function ProductCard({ name, type, volume, smallVolume, image, notes }: P
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Product Image */}
-      <div className="flex-1 flex items-center justify-center mb-6 relative">
+      {/* Image + Notes container with strict stacking context */}
+      <div className="isolate flex-1 flex items-center justify-center mb-6 relative">
         <Image
           alt={name}
           className="h-[320px] object-contain drop-shadow-2xl transition-transform duration-700 group-hover:scale-105 relative z-10"
@@ -46,13 +46,13 @@ export function ProductCard({ name, type, volume, smallVolume, image, notes }: P
           width={320}
           height={320}
         />
+
+        {/* Notes bloom - inside isolate container for proper blend context */}
+        {notes && <NotesBloom notes={notes} isVisible={isHovered} />}
       </div>
 
-      {/* Notes bloom - rendered AFTER image so it's on top */}
-      {notes && <NotesBloom notes={notes} isVisible={isHovered} />}
-
       {/* Product Info */}
-      <div className="mt-auto space-y-1 relative z-20">
+      <div className="mt-auto space-y-1 relative z-30">
         <p className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-medium">{type}</p>
         <h3
           className="text-4xl text-white"
