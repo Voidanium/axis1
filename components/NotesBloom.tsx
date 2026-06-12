@@ -1,14 +1,17 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import Image from 'next/image'
 
 interface NoteItem {
   id: string
   image: string
-  angle: number
-  distance: number
   label: string
+  // Absolute offsets from center of card image area (positive x = right, positive y = down)
+  offsetX: number
+  offsetY: number
+  size: number
+  rotate?: number
+  delay?: number
 }
 
 interface NotesBloomProps {
@@ -17,87 +20,69 @@ interface NotesBloomProps {
 }
 
 export function NotesBloom({ notes, isVisible }: NotesBloomProps) {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.06,
-        delayChildren: 0.05,
-      },
-    },
-  }
-
-  const noteVariants = {
-    hidden: {
-      opacity: 0,
-      scale: 0.2,
-      x: 0,
-      y: 0,
-    },
-    visible: (angle: number) => {
-      const radians = (angle * Math.PI) / 180
-      const x = Math.cos(radians) * 140
-      const y = Math.sin(radians) * 140
-      return {
-        opacity: 1,
-        scale: 1,
-        x,
-        y,
-        transition: {
-          type: 'spring',
-          damping: 20,
-          stiffness: 200,
-          mass: 1,
-        },
-      }
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.2,
-      x: 0,
-      y: 0,
-      transition: {
-        duration: 0.25,
-      },
-    },
-  }
-
   return (
-    <motion.div
-      className="absolute inset-0 pointer-events-none flex items-center justify-center"
-      variants={containerVariants}
-      initial="hidden"
-      animate={isVisible ? 'visible' : 'hidden'}
+    // Fills the image container div; overflow-visible lets notes bleed out
+    <div
+      className="pointer-events-none"
+      style={{
+        position: 'absolute',
+        inset: 0,
+        zIndex: 10,
+        overflow: 'visible',
+      }}
     >
       {notes.map((note) => (
         <motion.div
           key={note.id}
-          className="absolute"
-          custom={note.angle}
-          variants={noteVariants}
+          style={{
+            position: 'absolute',
+            // Center of parent, then offset by note's position
+            left: `calc(50% + ${note.offsetX}px)`,
+            top: `calc(50% + ${note.offsetY}px)`,
+            width: note.size,
+            height: note.size,
+            // Shift by half the image size so it's centered on the offset point
+            marginLeft: -note.size / 2,
+            marginTop: -note.size / 2,
+            willChange: 'transform, opacity',
+          }}
+          initial={{ opacity: 0, scale: 0.05, rotate: note.rotate ?? 0 }}
+          animate={
+            isVisible
+              ? {
+                  opacity: 1,
+                  scale: 1,
+                  rotate: note.rotate ?? 0,
+                  transition: {
+                    type: 'spring',
+                    damping: 18,
+                    stiffness: 160,
+                    delay: note.delay ?? 0,
+                  },
+                }
+              : {
+                  opacity: 0,
+                  scale: 0.05,
+                  rotate: note.rotate ?? 0,
+                  transition: { duration: 0.18, delay: 0 },
+                }
+          }
         >
-          <div className="relative flex flex-col items-center gap-1">
-            <div
-              style={{
-                mixBlendMode: 'screen',
-              }}
-            >
-              <Image
-                src={note.image}
-                alt={note.label}
-                width={100}
-                height={100}
-                className="w-24 h-24 object-contain drop-shadow-lg"
-                priority
-              />
-            </div>
-            <span className="text-[8px] uppercase tracking-widest text-white/30 font-light whitespace-nowrap">
-              {note.label}
-            </span>
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={note.image}
+            alt={note.label}
+            style={{
+              mixBlendMode: 'screen',
+              width: '100%',
+              height: '100%',
+              objectFit: 'contain',
+              display: 'block',
+              filter: 'drop-shadow(0 0 16px rgba(180,210,255,0.3))',
+            }}
+          />
         </motion.div>
       ))}
-    </motion.div>
+    </div>
   )
 }

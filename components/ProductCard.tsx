@@ -13,9 +13,12 @@ interface ProductCardProps {
   notes?: Array<{
     id: string
     image: string
-    angle: number
-    distance: number
     label: string
+    offsetX: number
+    offsetY: number
+    size: number
+    rotate?: number
+    delay?: number
   }>
 }
 
@@ -34,11 +37,8 @@ export function ProductCard({ name, type, volume, smallVolume, image, notes }: P
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Notes Bloom Effect */}
-      {notes && <NotesBloom notes={notes} isVisible={isHovered} />}
-
-      {/* Product Image */}
-      <div className="flex-1 flex items-center justify-center mb-6 relative z-10">
+      {/* Product Image + Notes layer */}
+      <div className="flex-1 flex items-center justify-center mb-6 relative" style={{ zIndex: 1 }}>
         <Image
           alt={name}
           className="h-[320px] object-contain drop-shadow-2xl transition-transform duration-700 group-hover:scale-105"
@@ -46,6 +46,8 @@ export function ProductCard({ name, type, volume, smallVolume, image, notes }: P
           width={320}
           height={320}
         />
+        {/* Notes bloom sits inside image area so offsets are relative to bottle center */}
+        {notes && <NotesBloom notes={notes} isVisible={isHovered} />}
       </div>
 
       {/* Product Info */}
