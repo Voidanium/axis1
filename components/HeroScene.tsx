@@ -67,7 +67,7 @@ export function HeroScene() {
           x: portraitParallaxX, 
           y: portraitParallaxY,
           // CHANGE THESE TO TWEAK THE PORTRAIT SIZE & POSITION:
-          translateX: '60px',  // Positive moves her right, negative moves her left
+          translateX: '50px',  // Positive moves her right, negative moves her left
           translateY: '0px',   // Shifts up/down if needed
           scale: 1.08          // Adjust her visual frame size
         }}
