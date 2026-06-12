@@ -95,7 +95,12 @@ export function ProductCard({ name, type, image, prices, notes }: ProductCardPro
                 className="flex items-baseline gap-0.5"
               >
                 <span className="text-2xl font-light text-white leading-none">{currentPrice}</span>
-                <span className="font-shopvert text-lg text-white/80 leading-none">i</span>
+                <span
+                  className="text-lg text-white/80 leading-none"
+                  style={{ fontFamily: 'Shopvert, system-ui' }}
+                >
+                  i
+                </span>
               </motion.div>
             </AnimatePresence>
           </div>
