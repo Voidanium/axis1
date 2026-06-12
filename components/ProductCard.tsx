@@ -37,18 +37,19 @@ export function ProductCard({ name, type, volume, smallVolume, image, notes }: P
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Product Image + Notes layer */}
-      <div className="flex-1 flex items-center justify-center mb-6 relative" style={{ zIndex: 1 }}>
+      {/* Product Image */}
+      <div className="flex-1 flex items-center justify-center mb-6 relative">
         <Image
           alt={name}
-          className="h-[320px] object-contain drop-shadow-2xl transition-transform duration-700 group-hover:scale-105"
+          className="h-[320px] object-contain drop-shadow-2xl transition-transform duration-700 group-hover:scale-105 relative z-10"
           src={image}
           width={320}
           height={320}
         />
-        {/* Notes bloom sits inside image area so offsets are relative to bottle center */}
-        {notes && <NotesBloom notes={notes} isVisible={isHovered} />}
       </div>
+
+      {/* Notes bloom - rendered AFTER image so it's on top */}
+      {notes && <NotesBloom notes={notes} isVisible={isHovered} />}
 
       {/* Product Info */}
       <div className="mt-auto space-y-1 relative z-20">
