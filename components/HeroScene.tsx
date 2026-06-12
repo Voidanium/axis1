@@ -26,13 +26,11 @@ export function HeroScene() {
   const fastX   = useSpring(rawX, fastCfg)
   const fastY   = useSpring(rawY, fastCfg)
 
-  // Layer 3 — portrait: ±18px parallax
-  const portraitX = useTransform(smoothX, [0, 1], [-18, 18])
-  const portraitY = useTransform(smoothY, [0, 1], [-18, 18])
-
-  // Layer 4 — hand/canister: ±36px parallax (2× faster → stronger depth)
-  const handX = useTransform(fastX, [0, 1], [-36, 36])
-  const handY = useTransform(fastY, [0, 1], [-36, 36])
+  // ── TUNING BALANCES (Base mouse movement tracking) ──
+  const portraitParallaxX = useTransform(smoothX, [0, 1], [-18, 18])
+  const portraitParallaxY = useTransform(smoothY, [0, 1], [-18, 18])
+  const handParallaxX     = useTransform(fastX, [0, 1], [-36, 36])
+  const handParallaxY     = useTransform(fastY, [0, 1], [-36, 36])
 
   // Scroll-linked frosted pane translation
   const { scrollY } = useScroll()
@@ -52,7 +50,7 @@ export function HeroScene() {
   return (
     <section
       ref={containerRef}
-      className="relative h-screen w-full overflow-hidden"
+      className="relative h-screen w-full overflow-hidden bg-black"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
@@ -62,29 +60,43 @@ export function HeroScene() {
         style={{ backgroundImage: `url(${BG})` }}
       />
 
-      {/* ── Layer 3: Portrait — medium parallax ── */}
+      {/* ── Layer 3: Portrait (Shifted Right & Adjustable) ── */}
       <motion.div
-        className="absolute inset-0 flex items-end justify-center"
-        style={{ x: portraitX, y: portraitY, scale: 1.05 }}
+        className="absolute inset-y-0 right-0 w-[60%] flex items-end justify-center z-10"
+        style={{ 
+          x: portraitParallaxX, 
+          y: portraitParallaxY,
+          // CHANGE THESE TO TWEAK THE PORTRAIT SIZE & POSITION:
+          translateX: '60px',  // Positive moves her right, negative moves her left
+          translateY: '0px',   // Shifts up/down if needed
+          scale: 1.08          // Adjust her visual frame size
+        }}
       >
         <img
           src={PORTRAIT}
           alt="Model portrait"
-          className="h-full w-auto object-contain object-bottom"
+          className="h-[95%] w-auto object-contain object-bottom select-none"
           style={{ mixBlendMode: 'multiply', filter: 'contrast(1.05)' }}
           draggable={false}
         />
       </motion.div>
 
-      {/* ── Layer 4: Hand & canister — fast parallax ── */}
+      {/* ── Layer 4: Hand & Canister (Shifted Left & Adjustable) ── */}
       <motion.div
-        className="absolute inset-0 flex items-end justify-center"
-        style={{ x: handX, y: handY, scale: 1.08 }}
+        className="absolute inset-y-0 left-0 w-[65%] flex items-end justify-center z-20"
+        style={{ 
+          x: handParallaxX, 
+          y: handParallaxY,
+          // CHANGE THESE TO TWEAK THE HAND SIZE & POSITION:
+          translateX: '-40px', // Negative moves hand left, positive moves hand right
+          translateY: '20px',  // Shifts up/down if needed
+          scale: 1.12          // Adjust bottle frame scale
+        }}
       >
         <img
           src={HAND}
           alt="Hand holding AXIS canister"
-          className="h-full w-auto object-contain object-bottom"
+          className="h-[90%] w-auto object-contain object-bottom select-none"
           style={{ mixBlendMode: 'multiply', filter: 'contrast(1.1) brightness(0.95)' }}
           draggable={false}
         />
@@ -92,34 +104,27 @@ export function HeroScene() {
 
       {/* ── Frosted glass pane with scroll-scan ── */}
       <motion.div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none z-30"
         style={{ y: paneY }}
       >
-        {/*
-          Full-screen frosted sheet.
-          clip-path cuts a sharp rectangular "peekaboo" window in the centre
-          so the layers behind it appear crystal-clear inside the opening.
-        */}
         <div
           className="absolute inset-0"
           style={{
-            // Frosted sheet covers everything EXCEPT the clear window rectangle
-            // The window is centred: ~20% from left, ~15% from top, ~60% wide, ~70% tall
             clipPath: `polygon(
               0% 0%, 100% 0%, 100% 100%, 0% 100%,
               0% 0%,
               20% 15%, 20% 85%, 80% 85%, 80% 15%,
               20% 15%
             )`,
-            backdropFilter: 'blur(18px) saturate(1.2)',
-            WebkitBackdropFilter: 'blur(18px) saturate(1.2)',
-            backgroundColor: 'rgba(10, 14, 20, 0.35)',
+            backdropFilter: 'blur(22px) saturate(1.1)',
+            WebkitBackdropFilter: 'blur(22px) saturate(1.1)',
+            backgroundColor: 'rgba(8, 10, 15, 0.45)',
           }}
         />
 
-        {/* SVG noise grain on top of the frosted region — same clip */}
+        {/* SVG noise grain on top of the frosted region */}
         <div
-          className="absolute inset-0 opacity-[0.06] mix-blend-overlay"
+          className="absolute inset-0 opacity-[0.07] mix-blend-overlay"
           style={{
             clipPath: `polygon(
               0% 0%, 100% 0%, 100% 100%, 0% 100%,
@@ -129,7 +134,7 @@ export function HeroScene() {
             )`,
             backgroundImage: `url("${NOISE_SVG}")`,
             backgroundRepeat: 'repeat',
-            backgroundSize: '200px 200px',
+            backgroundSize: '180px 180px',
           }}
         />
 
@@ -139,37 +144,37 @@ export function HeroScene() {
           style={{
             left: '20%', top: '15%',
             width: '60%', height: '70%',
-            border: '1px solid rgba(255,255,255,0.12)',
+            border: '1px solid rgba(255,255,255,0.08)',
             pointerEvents: 'none',
           }}
         />
 
-        {/* AXIS wordmark inside the clear window — bottom-left of window */}
+        {/* AXIS wordmark inside the clear window */}
         <div
           className="absolute"
-          style={{ left: '22%', top: '18%' }}
+          style={{ left: '23%', top: '18%' }}
         >
-          <p className="text-[11px] uppercase tracking-[0.3em] text-white/40 font-mono mb-1">
+          <p className="text-[10px] uppercase tracking-[0.35em] text-white/40 font-mono mb-1.5">
             Axis Laboratory
           </p>
           <h1
-            className="text-[clamp(3rem,8vw,7rem)] leading-none tracking-[-0.06em] text-white/90 select-none"
+            className="text-[clamp(2.5rem,7vw,6.5rem)] leading-none tracking-[-0.05em] text-white/95 select-none"
             style={{ fontFamily: "'Zen Dots', sans-serif", fontWeight: 400 }}
           >
             AXIS
           </h1>
-          <p className="text-[11px] uppercase tracking-[0.25em] text-white/30 font-mono mt-2">
+          <p className="text-[10px] uppercase tracking-[0.25em] text-white/30 font-mono mt-2.5">
             Industrial Perfumery
           </p>
         </div>
 
         {/* Scroll hint */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-          <span className="text-[10px] uppercase tracking-[0.3em] text-white/30 font-mono">Scroll</span>
+          <span className="text-[9px] uppercase tracking-[0.3em] text-white/30 font-mono">Scroll</span>
           <motion.div
             className="w-px h-8 bg-white/20"
-            animate={{ scaleY: [1, 0.3, 1], opacity: [0.3, 0.7, 0.3] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+            animate={{ scaleY: [1, 0.3, 1], opacity: [0.2, 0.6, 0.2] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           />
         </div>
       </motion.div>
