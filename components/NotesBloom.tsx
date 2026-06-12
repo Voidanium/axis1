@@ -6,7 +6,6 @@ interface NoteItem {
   id: string
   image: string
   label: string
-  // Absolute offsets from center of card image area (positive x = right, positive y = down)
   offsetX: number
   offsetY: number
   size: number
@@ -21,9 +20,8 @@ interface NotesBloomProps {
 
 export function NotesBloom({ notes, isVisible }: NotesBloomProps) {
   return (
-    // Absolute overlay within isolate container
     <div
-      className="pointer-events-none absolute inset-0"
+      className="pointer-events-none absolute inset-0 isolate"
       style={{
         zIndex: 15,
         overflow: 'visible',
@@ -40,7 +38,7 @@ export function NotesBloom({ notes, isVisible }: NotesBloomProps) {
             height: note.size,
             marginLeft: -note.size / 2,
             marginTop: -note.size / 2,
-            willChange: 'transform, opacity',
+            mixBlendMode: 'screen', // Moved blending to the outer animated layer
           }}
           initial={{ opacity: 0, scale: 0.05, rotate: note.rotate ?? 0 }}
           animate={
@@ -68,12 +66,12 @@ export function NotesBloom({ notes, isVisible }: NotesBloomProps) {
           <img
             src={note.image}
             alt={note.label}
-            className="w-full h-full mix-blend-screen"
+            className="w-full h-full"
             style={{
               mixBlendMode: 'screen',
               objectFit: 'contain',
               display: 'block',
-              filter: 'drop-shadow(0 0 12px rgba(220,220,228,0.5))',
+              // Removed drop-shadow from the target image to prevent rendering box borders
             }}
           />
         </motion.div>
