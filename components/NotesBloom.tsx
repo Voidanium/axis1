@@ -21,12 +21,28 @@ interface NotesBloomProps {
 export function NotesBloom({ notes, isVisible }: NotesBloomProps) {
   return (
     <div
-      className="pointer-events-none absolute inset-0 isolate"
+      className="pointer-events-none absolute inset-0"
       style={{
-        zIndex: 15,
+        zIndex: 0,
         overflow: 'visible',
       }}
     >
+      {/* Hidden SVG Filter that forces pure black to become transparent */}
+      <svg className="absolute w-0 h-0" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="remove-black" colorInterpolationFilters="sRGB">
+            {/* This matrix keeps the Red, Green, and Blue channels, but calculates Alpha based on brightness */}
+            <feColorMatrix
+              type="matrix"
+              values="1 0 0 0 0
+                      0 1 0 0 0
+                      0 0 1 0 0
+                      1 1 1 0 -0.1" 
+            />
+          </filter>
+        </defs>
+      </svg>
+
       {notes.map((note) => (
         <motion.div
           key={note.id}
@@ -38,7 +54,6 @@ export function NotesBloom({ notes, isVisible }: NotesBloomProps) {
             height: note.size,
             marginLeft: -note.size / 2,
             marginTop: -note.size / 2,
-            mixBlendMode: 'screen', // Moved blending to the outer animated layer
           }}
           initial={{ opacity: 0, scale: 0.05, rotate: note.rotate ?? 0 }}
           animate={
@@ -68,10 +83,9 @@ export function NotesBloom({ notes, isVisible }: NotesBloomProps) {
             alt={note.label}
             className="w-full h-full"
             style={{
-              mixBlendMode: 'screen',
               objectFit: 'contain',
               display: 'block',
-              // Removed drop-shadow from the target image to prevent rendering box borders
+              filter: 'url(#remove-black)', // Forces the browser to run the transparency filter
             }}
           />
         </motion.div>
