@@ -1,7 +1,7 @@
 'use client'
 
 import { Header } from '@/components/Header'
-import { HeroSection } from '@/components/HeroSection'
+import { HeroScene } from '@/components/HeroScene'
 import { ProductCard } from '@/components/ProductCard'
 import { ResearchSection } from '@/components/ResearchSection'
 import { Footer } from '@/components/Footer'
@@ -86,11 +86,11 @@ export default function Home() {
     <>
       <CursorGlow />
       <Header />
-      <main className="relative min-h-screen flex flex-col items-center pt-24 pb-12 overflow-hidden z-10">
-        <HeroSection />
+      <main className="relative flex flex-col items-center pb-12 z-10">
+        <HeroScene />
 
         {/* Products Section */}
-        <section className="relative z-20 w-full max-w-[1100px] px-6 mt-12">
+        <section className="relative z-20 w-full max-w-[1100px] px-6 mt-16">
           <div className="glass-main rounded-[40px] p-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
               {products.map((product) => (
