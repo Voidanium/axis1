@@ -36,19 +36,29 @@ export function ProductCard({ name, type, volume, smallVolume, image, notes }: P
       className="glass-card-inset rounded-[32px] p-8 flex flex-col min-h-[580px] relative group overflow-visible"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      style={{ isolation: 'isolate' }} // Enforces that everything inside this card blends inside its own universe
     >
-      {/* Image + Notes container with strict stacking context */}
-      <div className="isolate flex-1 flex items-center justify-center mb-6 relative">
-        <Image
-          alt={name}
-          className="h-[320px] object-contain drop-shadow-2xl transition-transform duration-700 group-hover:scale-105 relative z-10"
-          src={image}
-          width={320}
-          height={320}
-        />
+      {/* Image + Notes container */}
+      <div className="flex-1 flex items-center justify-center mb-6 relative overflow-visible">
+        
+        {/* Main Perfume Bottle */}
+        <div className="relative z-10 transition-transform duration-700 group-hover:scale-105">
+          <Image
+            alt={name}
+            className="h-[320px] object-contain"
+            src={image}
+            width={320}
+            height={320}
+            priority
+          />
+        </div>
 
-        {/* Notes bloom - inside isolate container for proper blend context */}
-        {notes && <NotesBloom notes={notes} isVisible={isHovered} />}
+        {/* Notes bloom - Set to z-0 so it stays perfectly underneath the bottle */}
+        {notes && (
+          <div className="absolute inset-0 z-0 mix-blend-screen">
+            <NotesBloom notes={notes} isVisible={isHovered} />
+          </div>
+        )}
       </div>
 
       {/* Product Info */}
@@ -82,4 +92,3 @@ export function ProductCard({ name, type, volume, smallVolume, image, notes }: P
     </div>
   )
 }
-
