@@ -32,9 +32,9 @@ export function HeroScene() {
   const handParallaxX     = useTransform(fastX, [0, 1], [-36, 36])
   const handParallaxY     = useTransform(fastY, [0, 1], [-36, 36])
 
-  // Scroll-linked frosted pane translation
+  // Scroll-linked interface translation (Only pushes typography and glass outlines, NOT the artwork)
   const { scrollY } = useScroll()
-  const paneY = useTransform(scrollY, [0, 600], [0, -120])
+  const UI_Y = useTransform(scrollY, [0, 600], [0, -120])
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect()
@@ -54,7 +54,7 @@ export function HeroScene() {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      {/* ── LAYER 1: HEAVILY BLURRED BACKDROP OVERLAY (The "Frosted Sheet" base) ── */}
+      {/* ── LAYER 1: HEAVILY BLURRED BACKDROP OVERLAY (Stays completely fixed) ── */}
       <div className="absolute inset-0 z-10 pointer-events-none">
         {/* Blurring the static environment background */}
         <div
@@ -108,11 +108,11 @@ export function HeroScene() {
         <div className="absolute inset-0 bg-black/15" />
       </div>
 
-      {/* ── LAYER 2: SHARP INSIDE CONTENT WINDOW (Carved out via clipPath) ── */}
+      {/* ── LAYER 2: SHARP INSIDE CONTENT WINDOW (Perfect 1:1 positional pinning) ── */}
       <div 
-        className="absolute inset-0 z-20"
+        className="absolute inset-0 z-20 pointer-events-none"
         style={{
-          clipPath: 'inset(12% 15% 12% 15%)' // Sharp crop boundaries to create the open view frame
+          clipPath: 'inset(12% 15% 12% 15%)' // Static viewport cut template
         }}
       >
         {/* Crystal Clear Background */}
@@ -149,12 +149,12 @@ export function HeroScene() {
         </motion.div>
       </div>
 
-      {/* ── LAYER 3: THE GLASS EDGE BEVEL & TEXT INTERFACE ── */}
+      {/* ── LAYER 3: MOVING UI INTERFACE (Only things meant to animate on scroll) ── */}
       <motion.div
         className="absolute inset-0 pointer-events-none z-30"
-        style={{ y: paneY }}
+        style={{ y: UI_Y }}
       >
-        {/* Beveled Outer Border Outline framing the sharp crop window */}
+        {/* Beveled Outer Window Framing Line */}
         <div
           className="absolute"
           style={{
@@ -163,11 +163,11 @@ export function HeroScene() {
             border: '1px solid rgba(255, 255, 255, 0.15)',
             boxShadow: `
               0 0 40px rgba(0, 0, 0, 0.6),
-              inset 0 0 24px rgba(0, 0, 0, 0.3)
-            `, // Casts crisp shadows inwards and outwards along the glass cut lines
+              inset 0 0 24px rgba(0, 0, 0, 0.2)
+            `,
           }}
         >
-          {/* Top Edge Light Glint reflection line */}
+          {/* Top Edge Light Glint */}
           <div 
             className="absolute top-0 left-0 right-0 h-[1px]"
             style={{
@@ -175,7 +175,7 @@ export function HeroScene() {
             }}
           />
 
-          {/* Left Edge Light Glint reflection line */}
+          {/* Left Edge Light Glint */}
           <div 
             className="absolute top-0 left-0 bottom-0 w-[1px]"
             style={{
