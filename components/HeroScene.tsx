@@ -59,7 +59,7 @@ export function HeroScene() {
           className="absolute inset-0 bg-cover bg-center scale-105"
           style={{ 
             backgroundImage: `url(${BG})`,
-            filter: 'blur(25px) brightness(1) saturate(1.2)'
+            filter: 'blur(32px) brightness(0.95) saturate(1.2)'
           }}
         />
 
