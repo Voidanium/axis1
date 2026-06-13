@@ -60,49 +60,86 @@ export function HeroScene() {
         style={{ backgroundImage: `url(${BG})` }}
       />
 
-      {/* ── Layer 2: Portrait (Shifted Right & Adjustable) ── */}
-      <motion.div
-        className="absolute inset-y-0 right-0 w-[60%] flex items-end justify-center z-10"
-        style={{ 
-          x: portraitParallaxX, 
-          y: portraitParallaxY,
-          translateX: '50px',
-          translateY: '0px',   
-          scale: 1.08          
-        }}
-      >
-        <img
-          src={PORTRAIT}
-          alt="Model portrait"
-          className="h-[95%] w-auto object-contain object-bottom select-none"
-          style={{ filter: 'contrast(1.05)' }}
-          draggable={false}
-        />
-      </motion.div>
+      {/* ── LAYER CONTAINER FOR GRAPHICS AND BLUR MASKING ── */}
+      <div className="absolute inset-0 z-10 pointer-events-none">
+        
+        {/* Sharp Background Graphics Layer */}
+        <div className="absolute inset-0">
+          {/* Portrait */}
+          <motion.div
+            className="absolute inset-y-0 right-0 w-[60%] flex items-end justify-center"
+            style={{ 
+              x: portraitParallaxX, 
+              y: portraitParallaxY,
+              translateX: '50px',
+              scale: 1.08          
+            }}
+          >
+            <img src={PORTRAIT} alt="Model portrait" className="h-[95%] w-auto object-contain object-bottom select-none" />
+          </motion.div>
 
-      {/* ── Layer 3: Hand & Canister (Shifted Left & Adjustable) ── */}
-      <motion.div
-        className="absolute inset-y-0 left-0 w-[65%] flex items-end justify-center z-20"
-        style={{ 
-          x: handParallaxX, 
-          y: handParallaxY,
-          translateX: '-40px',
-          translateY: '20px',  
-          scale: 1.12          
-        }}
-      >
-        <img
-          src={HAND}
-          alt="Hand holding AXIS canister"
-          className="h-[90%] w-auto object-contain object-bottom select-none"
-          style={{ filter: 'contrast(1.1) brightness(0.95)' }}
-          draggable={false}
-        />
-      </motion.div>
+          {/* Hand */}
+          <motion.div
+            className="absolute inset-y-0 left-0 w-[65%] flex items-end justify-center"
+            style={{ 
+              x: handParallaxX, 
+              y: handParallaxY,
+              translateX: '-40px',
+              translateY: '20px',  
+              scale: 1.12          
+            }}
+          >
+            <img src={HAND} alt="Hand holding AXIS canister" className="h-[90%] w-auto object-contain object-bottom select-none" />
+          </motion.div>
+        </div>
 
-      {/* ── Layer 4: Central Glass Card (With Top & Left Edge Highlights) ── */}
+        {/* ── DUPED BLUR LAYER (This physically mirrors and forces the heavy frost blur overlay) ── */}
+        <motion.div 
+          className="absolute overflow-hidden rounded-[4px]"
+          style={{
+            y: paneY,
+            left: '15%',
+            top: '12%',
+            width: '70%',
+            height: '76%',
+          }}
+        >
+          {/* The blurred mirror graphics engine */}
+          <div className="absolute inset-0 origin-center scale-[1.43]" style={{ filter: 'blur(28px) saturate(1.4) brightness(1.02)' }}>
+            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${BG})` }} />
+            
+            <motion.div className="absolute inset-y-0 right-0 w-[60%] flex items-end justify-center" style={{ x: portraitParallaxX, y: portraitParallaxY, translateX: '50px', scale: 1.08 }}>
+              <img src={PORTRAIT} alt="" className="h-[95%] w-auto object-contain object-bottom" />
+            </motion.div>
+
+            <motion.div className="absolute inset-y-0 left-0 w-[65%] flex items-end justify-center" style={{ x: handParallaxX, y: handParallaxY, translateX: '-40px', translateY: '20px', scale: 1.12 }}>
+              <img src={HAND} alt="" className="h-[90%] w-auto object-contain object-bottom" />
+            </motion.div>
+          </div>
+
+          {/* Frosted Material Tint Polish */}
+          <div className="absolute inset-0 bg-white/[0.02]" />
+
+          {/* Tactile Micro-Grit Texture */}
+          <div
+            className="absolute inset-0 opacity-[0.14] mix-blend-overlay"
+            style={{
+              backgroundImage: `url("${NOISE_SVG}")`,
+              backgroundRepeat: 'repeat',
+              backgroundSize: '130px 130px',
+            }}
+          />
+
+          {/* Edge Reflections (Beveling) */}
+          <div className="absolute inset-0 border border-white/20 rounded-[4px] shadow-[inset_0_0_24px_rgba(0,0,0,0.3)]" />
+          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+          <div className="absolute top-0 left-0 bottom-0 w-[1px] bg-gradient-to-b from-white/60 via-transparent to-white/10" />
+        </motion.div>
+      </div>
+
+      {/* ── Layer 5: Typography Interface (Guaranteed crisp on top) ── */}
       <motion.div
-        className="absolute z-30 overflow-hidden"
+        className="absolute z-30 pointer-events-none"
         style={{ 
           y: paneY,
           left: '15%', 
@@ -111,12 +148,33 @@ export function HeroScene() {
           height: '76%',
         }}
       >
-        {/* Core Glass Sheet Container */}
-        <div
-          className="absolute inset-0 rounded-[4px]"
-          style={{
-            backdropFilter: 'blur(16px) saturate(1.25) brightness(1.02)',
-            WebkitBackdropFilter: 'blur(16px) saturate(1.25) brightness(1.02)',
-            backgroundColor: 'rgba(255, 255, 255, 0.12)', // Elevated alpha matching your class logic
-            border: '1px solid rgba(255, 255, 255, 0.2)',  // Base structural border
-            boxShadow:
+        <div className="absolute inset-0 p-[5%] flex flex-col justify-between">
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.4em] text-white/60 font-mono mb-2">
+              Axis Laboratory [System Rev 1.0]
+            </p>
+            <h1
+              className="text-[clamp(3.5rem,10vw,8.5rem)] leading-none tracking-[-0.06em] text-white/95"
+              style={{ fontFamily: "'Zen Dots', sans-serif", fontWeight: 400 }}
+            >
+              AXIS
+            </h1>
+            <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-mono mt-3">
+              Industrial Perfumery Formulation
+            </p>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Global Scroll Hint */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-40 pointer-events-none">
+        <span className="text-[9px] uppercase tracking-[0.4em] text-white/30 font-mono">Scroll Context</span>
+        <motion.div
+          className="w-px h-10 bg-white/30"
+          animate={{ scaleY: [1, 0.4, 1], opacity: [0.2, 0.6, 0.2] }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      </div>
+    </section>
+  )
+}
