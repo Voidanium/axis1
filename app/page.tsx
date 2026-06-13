@@ -100,9 +100,9 @@ export default function Home() {
             {/* ── 🧪 TEMPORARY ALIGNMENT TEST CROSSHAIR (STRETCHES ALL DIRECTIONS) ── */}
             <div className="absolute inset-0 flex items-center justify-center opacity-90">
               {/* Horizontal line running all the way across the screen */}
-              <div className="absolute left-0 right-0 h-[15px] bg-white/100 shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
+              <div className="absolute left-0 right-0 h-[0px] bg-white/100 shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
               {/* Vertical line stretching top to bottom behind the container heights */}
-              <div className="absolute top-0 bottom-0 w-[15px] bg-white/100 shadow-[0_0_8px_rgba(255,255,255,1009)]" />
+              <div className="absolute top-0 bottom-0 w-[0px] bg-white/100 shadow-[0_0_8px_rgba(255,255,255,1009)]" />
             </div>
           </div>
 
