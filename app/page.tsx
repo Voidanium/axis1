@@ -2,7 +2,6 @@
 
 import { Header } from '@/components/Header'
 import { HeroScene } from '@/components/HeroScene'
-import { Starfield } from '@/components/Starfield' 
 import { ProductCard } from '@/components/ProductCard'
 import { ResearchSection } from '@/components/ResearchSection'
 import { Footer } from '@/components/Footer'
@@ -93,18 +92,16 @@ export default function Home() {
 
         <div className="relative w-full flex flex-col items-center pb-24 z-10 isolate">
           
-          {/* Background Layer Space */}
-          <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
-            <Starfield />
-
-            {/* ── 🧪 TEMPORARY ALIGNMENT TEST CROSSHAIR (STRETCHES ALL DIRECTIONS) ── */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-90">
-              {/* Horizontal line running all the way across the screen */}
-              <div className="absolute left-0 right-0 h-[0px] bg-white/100 shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
-              {/* Vertical line stretching top to bottom behind the container heights */}
-              <div className="absolute top-0 bottom-0 w-[0px] bg-white/100 shadow-[0_0_8px_rgba(255,255,255,1009)]" />
-            </div>
-          </div>
+          {/* ── 🛠️ THE NO-WORK BACKGROUND TRICK ── */}
+          {/* Instead of rendering heavy files, we use a pure CSS repeating dot grid.
+              When your moving CursorGlow passes behind it, it creates an instant dithered refraction feel. */}
+          <div 
+            className="absolute inset-0 -z-10 opacity-[0.07] pointer-events-none"
+            style={{
+              backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.8) 1px, transparent 1px)',
+              backgroundSize: '16px 16px',
+            }}
+          />
 
           {/* Products Section */}
           <section className="relative z-20 w-full max-w-[1100px] px-6 mt-16">
