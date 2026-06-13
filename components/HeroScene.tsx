@@ -116,7 +116,7 @@ export function HeroScene() {
               20% 15%, 20% 85%, 80% 85%, 80% 15%,
               20% 15%
             )`,
-            backdropFilter: 'blur(22px) saturate(1.1)',
+            backdropFilter: 'blur(30px) saturate(1.1)',
             WebkitBackdropFilter: 'blur(22px) saturate(1.1)',
             backgroundColor: 'rgba(8, 10, 15, 0.45)',
           }}
