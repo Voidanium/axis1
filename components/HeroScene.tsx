@@ -34,7 +34,7 @@ export function HeroScene() {
 
   // Scroll-linked frosted pane translation
   const { scrollY } = useScroll()
-  const paneY = useTransform(scrollY, [0, 600], [0, -260])
+  const paneY = useTransform(scrollY, [0, 600], [0, -120])
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect()
@@ -60,121 +60,149 @@ export function HeroScene() {
         style={{ backgroundImage: `url(${BG})` }}
       />
 
-      {/* ── Layer 3: Portrait (Shifted Right & Adjustable) ── */}
+      {/* ── Layer 2: Portrait (Shifted Right & Adjustable) ── */}
       <motion.div
         className="absolute inset-y-0 right-0 w-[60%] flex items-end justify-center z-10"
         style={{ 
           x: portraitParallaxX, 
           y: portraitParallaxY,
-          // CHANGE THESE TO TWEAK THE PORTRAIT SIZE & POSITION:
-          translateX: '50px',  // Positive moves her right, negative moves her left
-          translateY: '0px',   // Shifts up/down if needed
-          scale: 1.08          // Adjust her visual frame size
+          translateX: '50px',  // Positive moves her right
+          translateY: '0px',   
+          scale: 1.08          
         }}
       >
         <img
           src={PORTRAIT}
           alt="Model portrait"
           className="h-[95%] w-auto object-contain object-bottom select-none"
-          style={{ mixBlendMode: 'multiply', filter: 'contrast(1.05)' }}
+          style={{ filter: 'contrast(1.05)' }}
           draggable={false}
         />
       </motion.div>
 
-      {/* ── Layer 4: Hand & Canister (Shifted Left & Adjustable) ── */}
+      {/* ── Layer 3: Hand & Canister (Shifted Left & Adjustable) ── */}
       <motion.div
         className="absolute inset-y-0 left-0 w-[65%] flex items-end justify-center z-20"
         style={{ 
           x: handParallaxX, 
           y: handParallaxY,
-          // CHANGE THESE TO TWEAK THE HAND SIZE & POSITION:
-          translateX: '-40px', // Negative moves hand left, positive moves hand right
-          translateY: '20px',  // Shifts up/down if needed
-          scale: 1.12          // Adjust bottle frame scale
+          translateX: '-40px', // Negative moves hand left
+          translateY: '20px',  
+          scale: 1.12          
         }}
       >
         <img
           src={HAND}
           alt="Hand holding AXIS canister"
           className="h-[90%] w-auto object-contain object-bottom select-none"
-          style={{ mixBlendMode: 'multiply', filter: 'contrast(1.1) brightness(0.95)' }}
+          style={{ filter: 'contrast(1.1) brightness(0.95)' }}
           draggable={false}
         />
       </motion.div>
 
-      {/* ── Frosted glass pane with scroll-scan ── */}
+      {/* ── Layer 4: High-Fidelity Frosted Glass Frame ── */}
       <motion.div
         className="absolute inset-0 pointer-events-none z-30"
         style={{ y: paneY }}
       >
+        {/* Physical Glass Base (Brightened tint + heavy blur) */}
         <div
           className="absolute inset-0"
           style={{
             clipPath: `polygon(
               0% 0%, 100% 0%, 100% 100%, 0% 100%,
               0% 0%,
-              20% 15%, 20% 85%, 80% 85%, 80% 15%,
-              20% 15%
+              15% 12%, 15% 88%, 85% 88%, 85% 12%,
+              15% 12%
             )`,
-            backdropFilter: 'blur(30px) saturate(1.1)',
-            WebkitBackdropFilter: 'blur(22px) saturate(1.1)',
-            backgroundColor: 'rgba(8, 10, 15, 0.45)',
+            backdropFilter: 'blur(32px) saturate(1.3) brightness(1.05)',
+            WebkitBackdropFilter: 'blur(32px) saturate(1.3) brightness(1.05)',
+            backgroundColor: 'rgba(255, 255, 255, 0.04)', // White light scattering base
           }}
         />
 
-        {/* SVG noise grain on top of the frosted region */}
+        {/* Ambient Dark Core Shadow (Adds depth under the frost layer) */}
         <div
-          className="absolute inset-0 opacity-[0.07] mix-blend-overlay"
+          className="absolute inset-0"
           style={{
             clipPath: `polygon(
               0% 0%, 100% 0%, 100% 100%, 0% 100%,
               0% 0%,
-              20% 15%, 20% 85%, 80% 85%, 80% 15%,
-              20% 15%
+              15% 12%, 15% 88%, 85% 88%, 85% 12%,
+              15% 12%
             )`,
-            backgroundImage: `url("${NOISE_SVG}")`,
-            backgroundRepeat: 'repeat',
-            backgroundSize: '180px 180px',
+            backgroundColor: 'rgba(10, 12, 18, 0.25)', // Deepens contrast behind models
           }}
         />
 
-        {/* Sharp border around the clear window */}
+        {/* Tactile Micro-Grit SVG Texture */}
+        <div
+          className="absolute inset-0 opacity-[0.14] mix-blend-overlay"
+          style={{
+            clipPath: `polygon(
+              0% 0%, 100% 0%, 100% 100%, 0% 100%,
+              0% 0%,
+              15% 12%, 15% 88%, 85% 88%, 85% 12%,
+              15% 12%
+            )`,
+            backgroundImage: `url("${NOISE_SVG}")`,
+            backgroundRepeat: 'repeat',
+            backgroundSize: '140px 140px', // Tighter pattern for realistic glass grit
+          }}
+        />
+
+        {/* Beveled Outer Edge Frame (Simulating a premium cut glass sheet) */}
         <div
           className="absolute"
           style={{
-            left: '20%', top: '15%',
-            width: '60%', height: '70%',
-            border: '1px solid rgba(255,255,255,0.08)',
+            left: '15%', top: '12%',
+            width: '70%', height: '76%',
+            border: '1px solid rgba(255, 255, 255, 0.15)', // Sharp light reflection edge
+            boxShadow: 'inset 0 0 20px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 0, 0, 0.4)', // Casts inner and outer depth shadow
             pointerEvents: 'none',
           }}
         />
 
-        {/* AXIS wordmark inside the clear window */}
+        {/* Extra Light Catch Layer on the border */}
         <div
           className="absolute"
-          style={{ left: '23%', top: '18%' }}
+          style={{
+            left: '14.95%', top: '11.95%',
+            width: '70.1%', height: '76.1%',
+            border: '1px solid rgba(255, 255, 255, 0.05)',
+            pointerEvents: 'none',
+          }}
+        />
+
+        {/* Industrial Typography Overlays */}
+        <div
+          className="absolute flex flex-col justify-between"
+          style={{ left: '18%', top: '16%', width: '64%', height: '68%' }}
         >
-          <p className="text-[10px] uppercase tracking-[0.35em] text-white/40 font-mono mb-1.5">
-            Axis Laboratory
-          </p>
-          <h1
-            className="text-[clamp(2.5rem,7vw,6.5rem)] leading-none tracking-[-0.05em] text-white/95 select-none"
-            style={{ fontFamily: "'Zen Dots', sans-serif", fontWeight: 400 }}
-          >
-            AXIS
-          </h1>
-          <p className="text-[10px] uppercase tracking-[0.25em] text-white/30 font-mono mt-2.5">
-            Industrial Perfumery
-          </p>
+          {/* Top Wordmark Content Block */}
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.4em] text-white/50 font-mono mb-2">
+              Axis Laboratory [System Rev 1.0]
+            </p>
+            <h1
+              className="text-[clamp(3.5rem,10vw,8.5rem)] leading-none tracking-[-0.06em] text-white/95 select-none"
+              style={{ fontFamily: "'Zen Dots', sans-serif", fontWeight: 400 }}
+            >
+              AXIS
+            </h1>
+            <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-mono mt-3">
+              Industrial Perfumery Formulation
+            </p>
+          </div>
         </div>
 
-        {/* Scroll hint */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-          <span className="text-[9px] uppercase tracking-[0.3em] text-white/30 font-mono">Scroll</span>
+        {/* Scroll structural navigation hint */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+          <span className="text-[9px] uppercase tracking-[0.4em] text-white/30 font-mono">Scroll Context</span>
           <motion.div
-            className="w-px h-8 bg-white/20"
-            animate={{ scaleY: [1, 0.3, 1], opacity: [0.2, 0.6, 0.2] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            className="w-px h-10 bg-white/30"
+            animate={{ scaleY: [1, 0.4, 1], opacity: [0.2, 0.6, 0.2] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
           />
         </div>
       </motion.div>
