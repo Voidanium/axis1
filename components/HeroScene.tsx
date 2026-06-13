@@ -26,7 +26,7 @@ export function HeroScene() {
   const fastX   = useSpring(rawX, fastCfg)
   const fastY   = useSpring(rawY, fastCfg)
 
-  // ── TUNING BALANCES (Base mouse movement tracking) ──
+  // ── Parallax values for the imagery ──
   const portraitParallaxX = useTransform(smoothX, [0, 1], [-18, 18])
   const portraitParallaxY = useTransform(smoothY, [0, 1], [-18, 18])
   const handParallaxX     = useTransform(fastX, [0, 1], [-36, 36])
@@ -60,101 +60,138 @@ export function HeroScene() {
         style={{ backgroundImage: `url(${BG})` }}
       />
 
-      {/* ── LAYER CONTAINER FOR GRAPHICS AND BLUR MASKING ── */}
-      <div className="absolute inset-0 z-10 pointer-events-none">
-        
-        {/* Sharp Background Graphics Layer */}
-        <div className="absolute inset-0">
-          {/* Portrait */}
-          <motion.div
-            className="absolute inset-y-0 right-0 w-[60%] flex items-end justify-center"
-            style={{ 
-              x: portraitParallaxX, 
-              y: portraitParallaxY,
-              translateX: '50px',
-              scale: 1.08          
-            }}
-          >
-            <img src={PORTRAIT} alt="Model portrait" className="h-[95%] w-auto object-contain object-bottom select-none" />
-          </motion.div>
+      {/* ── Layer 2: Portrait (Shifted Right) ── */}
+      <motion.div
+        className="absolute inset-y-0 right-0 w-[60%] flex items-end justify-center z-10"
+        style={{ 
+          x: portraitParallaxX, 
+          y: portraitParallaxY,
+          translateX: '50px',
+          scale: 1.08          
+        }}
+      >
+        <img
+          src={PORTRAIT}
+          alt="Model portrait"
+          className="h-[95%] w-auto object-contain object-bottom select-none"
+          style={{ filter: 'contrast(1.05)' }}
+          draggable={false}
+        />
+      </motion.div>
 
-          {/* Hand */}
-          <motion.div
-            className="absolute inset-y-0 left-0 w-[65%] flex items-end justify-center"
-            style={{ 
-              x: handParallaxX, 
-              y: handParallaxY,
-              translateX: '-40px',
-              translateY: '20px',  
-              scale: 1.12          
-            }}
-          >
-            <img src={HAND} alt="Hand holding AXIS canister" className="h-[90%] w-auto object-contain object-bottom select-none" />
-          </motion.div>
-        </div>
+      {/* ── Layer 3: Hand & Canister (Shifted Left) ── */}
+      <motion.div
+        className="absolute inset-y-0 left-0 w-[65%] flex items-end justify-center z-20"
+        style={{ 
+          x: handParallaxX, 
+          y: handParallaxY,
+          translateX: '-40px',
+          translateY: '20px',  
+          scale: 1.12          
+        }}
+      >
+        <img
+          src={HAND}
+          alt="Hand holding AXIS canister"
+          className="h-[90%] w-auto object-contain object-bottom select-none"
+          style={{ filter: 'contrast(1.1) brightness(0.95)' }}
+          draggable={false}
+        />
+      </motion.div>
 
-        {/* ── DUPED BLUR LAYER (This physically mirrors and forces the heavy frost blur overlay) ── */}
-        <motion.div 
-          className="absolute overflow-hidden rounded-[4px]"
+      {/* ── Layer 4: TRUE Frosted Glass Pane with Center Clear Window Cutout ── */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none z-30"
+        style={{ y: paneY }}
+      >
+        {/* The Frosted Base Layer (Blurs everything OUTSIDE the 15% / 85% window) */}
+        <div
+          className="absolute inset-0"
           style={{
-            y: paneY,
-            left: '15%',
-            top: '12%',
-            width: '70%',
-            height: '76%',
+            clipPath: `polygon(
+              0% 0%, 100% 0%, 100% 100%, 0% 100%,
+              0% 0%,
+              15% 12%, 15% 88%, 85% 88%, 85% 12%,
+              15% 12%
+            )`,
+            backdropFilter: 'blur(24px) saturate(1.3) brightness(0.98)',
+            WebkitBackdropFilter: 'blur(24px) saturate(1.3) brightness(0.98)',
+            backgroundColor: 'rgba(255, 255, 255, 0.02)', // Minimal clean light dispersion
+          }}
+        />
+
+        {/* Tactile Micro-Grit Noise (Applied only to the frosted area) */}
+        <div
+          className="absolute inset-0 opacity-[0.09] mix-blend-overlay"
+          style={{
+            clipPath: `polygon(
+              0% 0%, 100% 0%, 100% 100%, 0% 100%,
+              0% 0%,
+              15% 12%, 15% 88%, 85% 88%, 85% 12%,
+              15% 12%
+            )`,
+            backgroundImage: `url("${NOISE_SVG}")`,
+            backgroundRepeat: 'repeat',
+            backgroundSize: '140px 140px',
+          }}
+        />
+
+        {/* Ambient Depth Contrast Shadow (Darkens the frame slightly to let the window pop) */}
+        <div
+          className="absolute inset-0"
+          style={{
+            clipPath: `polygon(
+              0% 0%, 100% 0%, 100% 100%, 0% 100%,
+              0% 0%,
+              15% 12%, 15% 88%, 85% 88%, 85% 12%,
+              15% 12%
+            )`,
+            backgroundColor: 'rgba(0, 0, 0, 0.15)',
+          }}
+        />
+
+        {/* ── Precision Beveled Cuts for the Window Edges (Your CSS Glass Logic) ── */}
+        <div
+          className="absolute"
+          style={{
+            left: '15%', top: '12%',
+            width: '70%', height: '76%',
+            border: '1px solid rgba(255, 255, 255, 0.15)', // Sharp inner edge perimeter
+            boxShadow: `
+              0 0 30px rgba(0, 0, 0, 0.5),
+              inset 0 12px 24px -10px rgba(0, 0, 0, 0.4),
+              inset 0 -12px 24px -10px rgba(0, 0, 0, 0.4)
+            `, // Casts subtle shadow depths over the clear window area
           }}
         >
-          {/* The blurred mirror graphics engine */}
-          <div className="absolute inset-0 origin-center scale-[1.43]" style={{ filter: 'blur(28px) saturate(1.4) brightness(1.02)' }}>
-            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${BG})` }} />
-            
-            <motion.div className="absolute inset-y-0 right-0 w-[60%] flex items-end justify-center" style={{ x: portraitParallaxX, y: portraitParallaxY, translateX: '50px', scale: 1.08 }}>
-              <img src={PORTRAIT} alt="" className="h-[95%] w-auto object-contain object-bottom" />
-            </motion.div>
-
-            <motion.div className="absolute inset-y-0 left-0 w-[65%] flex items-end justify-center" style={{ x: handParallaxX, y: handParallaxY, translateX: '-40px', translateY: '20px', scale: 1.12 }}>
-              <img src={HAND} alt="" className="h-[90%] w-auto object-contain object-bottom" />
-            </motion.div>
-          </div>
-
-          {/* Frosted Material Tint Polish */}
-          <div className="absolute inset-0 bg-white/[0.02]" />
-
-          {/* Tactile Micro-Grit Texture */}
-          <div
-            className="absolute inset-0 opacity-[0.14] mix-blend-overlay"
+          {/* Glass Card Top Edge Highlight (From your CSS code snippet) */}
+          <div 
+            className="absolute top-0 left-0 right-0 h-[1px]"
             style={{
-              backgroundImage: `url("${NOISE_SVG}")`,
-              backgroundRepeat: 'repeat',
-              backgroundSize: '130px 130px',
+              background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent)'
             }}
           />
 
-          {/* Edge Reflections (Beveling) */}
-          <div className="absolute inset-0 border border-white/20 rounded-[4px] shadow-[inset_0_0_24px_rgba(0,0,0,0.3)]" />
-          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
-          <div className="absolute top-0 left-0 bottom-0 w-[1px] bg-gradient-to-b from-white/60 via-transparent to-white/10" />
-        </motion.div>
-      </div>
+          {/* Glass Card Left Edge Highlight (From your CSS code snippet) */}
+          <div 
+            className="absolute top-0 left-0 bottom-0 w-[1px]"
+            style={{
+              background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.6), transparent, rgba(255, 255, 255, 0.1))'
+            }}
+          />
+        </div>
 
-      {/* ── Layer 5: Typography Interface (Guaranteed crisp on top) ── */}
-      <motion.div
-        className="absolute z-30 pointer-events-none"
-        style={{ 
-          y: paneY,
-          left: '15%', 
-          top: '12%',
-          width: '70%', 
-          height: '76%',
-        }}
-      >
-        <div className="absolute inset-0 p-[5%] flex flex-col justify-between">
+        {/* Typography Interface Content */}
+        <div
+          className="absolute flex flex-col justify-between"
+          style={{ left: '18%', top: '16%', width: '64%', height: '68%' }}
+        >
           <div>
             <p className="text-[10px] uppercase tracking-[0.4em] text-white/60 font-mono mb-2">
               Axis Laboratory [System Rev 1.0]
             </p>
             <h1
-              className="text-[clamp(3.5rem,10vw,8.5rem)] leading-none tracking-[-0.06em] text-white/95"
+              className="text-[clamp(3.5rem,10vw,8.5rem)] leading-none tracking-[-0.06em] text-white/95 select-none"
               style={{ fontFamily: "'Zen Dots', sans-serif", fontWeight: 400 }}
             >
               AXIS
@@ -164,17 +201,17 @@ export function HeroScene() {
             </p>
           </div>
         </div>
-      </motion.div>
 
-      {/* Global Scroll Hint */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-40 pointer-events-none">
-        <span className="text-[9px] uppercase tracking-[0.4em] text-white/30 font-mono">Scroll Context</span>
-        <motion.div
-          className="w-px h-10 bg-white/30"
-          animate={{ scaleY: [1, 0.4, 1], opacity: [0.2, 0.6, 0.2] }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      </div>
+        {/* Scroll structural navigation hint */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+          <span className="text-[9px] uppercase tracking-[0.4em] text-white/30 font-mono">Scroll Context</span>
+          <motion.div
+            className="w-px h-10 bg-white/30"
+            animate={{ scaleY: [1, 0.4, 1], opacity: [0.2, 0.6, 0.2] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        </div>
+      </motion.div>
     </section>
   )
 }
